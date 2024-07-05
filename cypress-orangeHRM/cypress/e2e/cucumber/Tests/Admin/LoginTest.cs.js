@@ -1,0 +1,10 @@
+/// <reference types="cypress" />
+import {Given, When, Then, And} from "cypress-cucumber-preprocessor/steps"
+import login from "../../Pages/Admin/LoginPage.cy";
+Given("Navegar até o site", () => {
+	login.enterURL();
+});
+Given("Logar no site com usuário {string} com a senha {string}", (username, validpassword) => {
+	login.enterUserNamePassword(username, validpassword);
+	login.clickSubmitButton();
+});

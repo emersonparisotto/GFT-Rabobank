@@ -1,0 +1,13 @@
+Feature: Quero cadastrar um usuário válido
+
+  Background: Navegar até o site
+    Given Navegar até o site
+
+   Scenario: Incluir usuário válido
+    Given Logar no site com usuário "Admin" com a senha "admin123"
+	When Acessar página de inclusão de usuário
+	And Entrar com os dados de formulário válidos
+      | userRole                 | employeeName            | status  | username    | password |
+      | Admin                    | Peter Mac Anderson      | Enabled | testerRBB11 | teste123 |
+    And Clicar no botão Salvar
+    Then Validar o usuário "testerRBB11" 

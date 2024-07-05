@@ -1,0 +1,55 @@
+class AddUser {
+	
+   accessAdminPage() {
+	cy.get('[class="oxd-main-menu"]').contains('Admin', { matchCase: false} ).should('exist')
+    cy.get('[class="oxd-main-menu"]').contains('Admin', { matchCase: false} ).click();
+	cy.wait(3000);
+    return this;
+  }
+   accessAddUserPage() {
+    cy.get('[type="button"]').contains('Add', { matchCase: false} ).click();
+	cy.wait(3000);
+    return this;
+  }
+  
+   fillAddUserPage(userRole, employeeName, status, username, password) {
+    cy.xpath('/html/body/div/div[1]/div[2]/div[2]/div/div/form/div[1]/div/div[1]/div/div[2]/div/div/div[1]').type(userRole+"{downArrow}{enter}", {
+     delay: 500,
+	});
+    cy.xpath('/html/body/div/div[1]/div[2]/div[2]/div/div/form/div[1]/div/div[2]/div/div[2]/div/div/input').type(employeeName, {
+     delay: 1000,
+	});
+	cy.wait(1000);
+   cy.xpath('/html/body/div/div[1]/div[2]/div[2]/div/div/form/div[1]/div/div[2]/div/div[2]/div/div/input').type("{downArrow}{enter}", {
+     delay: 500,
+	});
+	if(status == "Enabled") {
+		cy.xpath('/html/body/div/div[1]/div[2]/div[2]/div/div/form/div[1]/div/div[3]/div/div[2]/div/div/div[1]').type("{downArrow}", {
+		 delay: 500,
+		}).tab();
+	} else {
+		cy.xpath('/html/body/div/div[1]/div[2]/div[2]/div/div/form/div[1]/div/div[3]/div/div[2]/div/div/div[1]').type("{downArrow}{downArrow}", {
+		 delay: 500,
+		}).tab();
+	}
+    cy.xpath('/html/body/div/div[1]/div[2]/div[2]/div/div/form/div[1]/div/div[4]/div/div[2]/input').type(username);
+    cy.xpath('/html/body/div/div[1]/div[2]/div[2]/div/div/form/div[2]/div/div[1]/div/div[2]/input').type(password);
+    cy.xpath('/html/body/div/div[1]/div[2]/div[2]/div/div/form/div[2]/div/div[2]/div/div[2]/input').type(password);
+    return this;
+  }
+
+  clickSubmitButton() {
+    cy.get('[type="submit"]').eq(0).click();
+	cy.wait(3000);
+    return this;
+  }
+
+   verifySuccessfulMessage(username) {
+	cy.xpath('/html/body/div/div[1]/div[2]/div[2]/div/div[1]/div[2]/form/div[1]/div/div[1]/div/div[2]/input').type(username);
+    cy.get('[type="submit"]').eq(0).click();
+	cy.wait(1000);
+     return cy.xpath('/html/body/div/div[1]/div[2]/div[2]/div/div[2]/div[3]/div/div[2]/div[1]/div/div[2]/div').contains(username);
+  }
+}
+const addUser = new AddUser();
+export default addUser;
