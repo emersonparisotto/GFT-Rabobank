@@ -6,42 +6,25 @@
     using Newtonsoft.Json.Linq;
 
     [TestClass]
-    public class TesteGET
+    public class TesteGET : TesteBase
     {
-        private RestClient client;
-
-        [TestInitialize]
-        public void Initialize()
-        { 
-            // Inicializa o RestClient com a URL base do HTTPBin
-            client = new RestClient("https://reqres.in");
-        }
-
         [TestMethod]
         public void PostData_ReturnsCorrectResponse()
         {
-            // Definindo o endpoint e o método da requisição
-            var request = new RestRequest("/api/users/2", Method.Get);
+            // Carregar dados de teste do arquivo JSON
+            var testData = LoadTestData("user_data_GET.json");
 
-            // Executando a requisição
-            var response = client.Execute(request);
+            // Verificar se os dados de teste foram carregados corretamente
+            Assert.IsNotNull(testData, "Os dados de teste não foram carregados.");
+            Assert.IsNotNull(testData["id"], "Os dados do usuário não foram encontrados no arquivo de teste.");
 
-            // Verificando se o status da resposta é 200 OK
-            Assert.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode, "A solicitação falhou ou o status code está incorreto.");
-            if(response.StatusCode == System.Net.HttpStatusCode.NotFound)
-            {
-                Assert.Fail("A solicitação retornou status 404 - Not found");
-            }
-            if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-            {
-                Assert.Fail("A solicitação retornou status 500 - Internal Server Error.");
-            }
+            var expectedUserId = (int)testData["id"];
+            Console.WriteLine(testData);
+            // Executar a requisição
+            var response = ExecuteRequestGET("/api/users/" + expectedUserId, Method.Get);
 
-            // Opcional: Verificar se os dados do usuário retornados estão corretos
-            // Para isso, podemos deserializar o corpo da resposta e verificar os valores
-            var responseBody = JObject.Parse(response.Content);
-            Assert.IsNotNull(responseBody["data"], "Os dados do usuário não foram retornados.");
-            Assert.AreEqual(2, (int)responseBody["data"]["id"], "O ID do usuário retornado está incorreto.");
+            // Validar a resposta
+            ValidateResponse(response, System.Net.HttpStatusCode.OK);
         }
     }
 }
